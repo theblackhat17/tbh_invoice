@@ -1,9 +1,8 @@
-// src/lib/db.js
+// src/lib/db.ts
 import Database from 'better-sqlite3';
 
-const db = new Database('invoices.db');
+const db = new Database('invoices.db', { verbose: console.log });
 
-// Crée la table des factures si elle n'existe pas
 db.exec(`
   CREATE TABLE IF NOT EXISTS invoices (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,7 +10,7 @@ db.exec(`
     invoice_date TEXT,
     client_name TEXT,
     client_address TEXT,
-    items TEXT, -- Stocké au format JSON
+    items TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `);

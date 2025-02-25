@@ -11829,8 +11829,12 @@
 │       ├── +page.svelte
 │       ├── api
 │       │   └── invoices
-│       │       └── +server.js
+│       │       └── [id]
+│       │           └── +server.ts
 │       └── invoices
+│           ├── edit
+│           │   └── [id]
+│           │       └── +page.svelte
 │           └── new
 │               └── +page.svelte
 ├── static
@@ -11839,4 +11843,4 @@
 ├── tsconfig.json
 └── vite.config.ts
 
-1095 directories, 10745 files
+1098 directories, 10746 files
