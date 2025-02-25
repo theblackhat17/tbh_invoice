@@ -11,7 +11,8 @@ db.exec(`
     client_name TEXT,
     client_address TEXT,
     items TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    userId TEXT
   )
 `);
 

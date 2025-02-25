@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(uuid())
+  email    String    @unique
+  password String
+  avatar   String?
+  billing  Json?
+  invoices Invoice[] // Relation inverse, liste des factures associées à cet utilisateur
+}
+
+model Invoice {
+  id             Int      @id @default(autoincrement())
+  invoice_number String
+  invoice_date   DateTime
+  client_name    String
+  client_address String
+  items          Json
+  created_at     DateTime @default(now())
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id])
+}

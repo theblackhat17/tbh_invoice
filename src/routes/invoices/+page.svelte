@@ -9,7 +9,7 @@
       invoice_date: string;
       client_name: string;
       client_address: string;
-      items: string; // stocké en JSON
+      items: string;
       created_at: string;
     }
   
@@ -43,63 +43,43 @@
     }
   </script>
   
-  <h1>Liste des Factures</h1>
+  <h1 class="text-3xl font-bold mb-4">Liste des Factures</h1>
   
   {#if invoices.length === 0}
     <p>Aucune facture enregistrée.</p>
   {:else}
     <ul>
       {#each invoices as invoice}
-        <li style="margin-bottom: 10px;">
-          <strong>{invoice.invoice_number}</strong> – {invoice.client_name} – {invoice.invoice_date}
-          <button on:click={() => showInvoice(invoice)}>Voir</button>
-          <button on:click={() => editInvoice(invoice.id)}>Modifier</button>
-          <button on:click={() => deleteInvoice(invoice.id)}>Supprimer</button>
+        <li class="mb-4 p-4 border rounded shadow-sm flex items-center justify-between">
+          <div>
+            <strong class="text-xl">{invoice.invoice_number}</strong>
+            <span class="ml-2 text-gray-600">{invoice.client_name} – {invoice.invoice_date}</span>
+          </div>
+          <div>
+            <button class="px-2 py-1 bg-blue-500 text-white rounded" on:click={() => showInvoice(invoice)}>Voir</button>
+            <button class="px-2 py-1 bg-green-500 text-white rounded" on:click={() => editInvoice(invoice.id)}>Modifier</button>
+            <button class="px-2 py-1 bg-red-500 text-white rounded" on:click={() => deleteInvoice(invoice.id)}>Supprimer</button>
+          </div>
         </li>
       {/each}
     </ul>
   {/if}
   
   {#if currentInvoice}
-    <!-- Modale d'affichage de la facture -->
-    <div class="modal">
-      <div class="modal-content">
-        <h2>Facture N°: {currentInvoice.invoice_number}</h2>
+    <div class="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div class="modal-content bg-white p-6 rounded shadow-md max-w-lg w-full">
+        <h2 class="text-2xl font-bold mb-2">Facture N°: {currentInvoice.invoice_number}</h2>
         <p>Date: {currentInvoice.invoice_date}</p>
         <p>Client: {currentInvoice.client_name}</p>
         <p>Adresse: {currentInvoice.client_address}</p>
-        <h3>Prestations :</h3>
-        <ul>
+        <h3 class="mt-4 font-semibold">Prestations :</h3>
+        <ul class="list-disc pl-6">
           {#each JSON.parse(currentInvoice.items) as item}
             <li>{item.description} - Quantité: {item.quantity} - Prix: {item.price} €</li>
           {/each}
         </ul>
-        <button on:click={closeModal}>Fermer</button>
+        <button class="mt-4 px-4 py-2 bg-gray-700 text-white rounded" on:click={closeModal}>Fermer</button>
       </div>
     </div>
   {/if}
-  
-  <style>
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 5px;
-      max-width: 500px;
-      width: 90%;
-    }
-    button {
-      margin-left: 10px;
-    }
-  </style>
   

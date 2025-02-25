@@ -36,7 +36,11 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@lucia-auth/adapter-prisma": "^4.0.1",
+		"@prisma/client": "^6.4.1",
 		"better-sqlite3": "^11.8.1",
-		"jspdf": "^3.0.0"
+		"jspdf": "^3.0.0",
+		"lucia": "^3.2.2",
+		"prisma": "^6.4.1"
 	}
 }

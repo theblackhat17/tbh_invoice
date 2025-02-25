@@ -10,7 +10,6 @@
   let clientAddress: string = '';
   let items: { description: string; quantity: number; price: number }[] = [{ description: '', quantity: 1, price: 0 }];
 
-  // Récupère l'id depuis les paramètres de la page
   const { id } = $page.params;
 
   onMount(async () => {
@@ -57,55 +56,55 @@
   }
 </script>
 
-<h1>Modifier la Facture</h1>
-<form on:submit|preventDefault={saveInvoice}>
+<h1 class="text-3xl font-bold mb-4">Modifier la Facture</h1>
+<form on:submit|preventDefault={saveInvoice} class="space-y-4">
   <div>
-    <label>
+    <label class="block">
       Numéro de facture:
-      <input type="text" bind:value={invoiceNumber} required />
+      <input type="text" bind:value={invoiceNumber} required class="w-full p-2 border rounded" />
     </label>
   </div>
   <div>
-    <label>
+    <label class="block">
       Date:
-      <input type="date" bind:value={invoiceDate} required />
+      <input type="date" bind:value={invoiceDate} required class="w-full p-2 border rounded" />
     </label>
   </div>
   <div>
-    <label>
+    <label class="block">
       Nom du client:
-      <input type="text" bind:value={clientName} required />
+      <input type="text" bind:value={clientName} required class="w-full p-2 border rounded" />
     </label>
   </div>
   <div>
-    <label>
+    <label class="block">
       Adresse du client:
-      <input type="text" bind:value={clientAddress} required />
+      <input type="text" bind:value={clientAddress} required class="w-full p-2 border rounded" />
     </label>
   </div>
   
-  <h2>Prestations</h2>
+  <h2 class="text-xl font-semibold mt-4">Prestations</h2>
   {#each items as item, index}
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-      <label>
+    <div class="border p-4 rounded mb-4">
+      <label class="block">
         Description:
-        <input type="text" bind:value={item.description} required />
+        <input type="text" bind:value={item.description} required class="w-full p-2 border rounded" />
       </label>
-      <label>
+      <label class="block mt-2">
         Quantité:
-        <input type="number" bind:value={item.quantity} min="1" required />
+        <input type="number" bind:value={item.quantity} min="1" required class="w-full p-2 border rounded" />
       </label>
-      <label>
+      <label class="block mt-2">
         Prix unitaire:
-        <input type="number" bind:value={item.price} min="0" step="0.01" required />
+        <input type="number" bind:value={item.price} min="0" step="0.01" required class="w-full p-2 border rounded" />
       </label>
       {#if items.length > 1}
-        <button type="button" on:click={() => removeItem(index)}>Supprimer</button>
+        <button type="button" class="mt-2 px-3 py-1 bg-red-500 text-white rounded" on:click={() => removeItem(index)}>Supprimer</button>
       {/if}
     </div>
   {/each}
-  <button type="button" on:click={addItem}>Ajouter prestation</button>
-  <div style="margin-top: 20px;">
-    <button type="submit">Enregistrer la modification</button>
+  <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded" on:click={addItem}>Ajouter prestation</button>
+  <div class="mt-6">
+    <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded">Enregistrer la modification</button>
   </div>
 </form>
