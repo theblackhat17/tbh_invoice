@@ -1,18 +1,21 @@
-<!-- src/routes/invoices/edit/[id]/+page.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import { fade } from 'svelte/transition';
+
+  interface InvoiceItem {
+    description: string;
+    quantity: number;
+    price: number;
+  }
 
   let invoiceNumber: string = '';
   let invoiceDate: string = '';
   let clientName: string = '';
   let clientAddress: string = '';
-  let items: { description: string; quantity: number; price: number }[] = [
-    { description: '', quantity: 1, price: 0 }
-  ];
+  let items: InvoiceItem[] = [{ description: '', quantity: 1, price: 0 }];
 
-  // Récupération de l'id de l'URL via le store $page
   const { id } = $page.params;
 
   onMount(async () => {
@@ -59,13 +62,13 @@
   }
 </script>
 
-<div class="max-w-4xl mx-auto p-8 bg-white rounded shadow">
-  <h1 class="text-3xl font-bold mb-6 text-center">Modifier la Facture</h1>
+<div class="max-w-4xl mx-auto p-8 bg-white rounded shadow-lg">
+  <h1 class="text-3xl font-bold mb-8 text-center">Modifier la Facture</h1>
   
   <!-- Section Informations Générales -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
-      <label class="block font-semibold mb-1">Numéro de facture</label>
+      <label class="block text-gray-700 font-semibold mb-1">Numéro de facture</label>
       <input
         type="text"
         bind:value={invoiceNumber}
@@ -74,7 +77,7 @@
       />
     </div>
     <div>
-      <label class="block font-semibold mb-1">Date de facture</label>
+      <label class="block text-gray-700 font-semibold mb-1">Date de facture</label>
       <input
         type="date"
         bind:value={invoiceDate}
@@ -87,7 +90,7 @@
   <!-- Section Informations Client -->
   <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
-      <label class="block font-semibold mb-1">Nom du client</label>
+      <label class="block text-gray-700 font-semibold mb-1">Nom du client</label>
       <input
         type="text"
         bind:value={clientName}
@@ -96,7 +99,7 @@
       />
     </div>
     <div>
-      <label class="block font-semibold mb-1">Adresse du client</label>
+      <label class="block text-gray-700 font-semibold mb-1">Adresse du client</label>
       <input
         type="text"
         bind:value={clientAddress}
@@ -109,54 +112,56 @@
   <!-- Section Prestations -->
   <div class="mt-8">
     <h2 class="text-xl font-bold mb-4">Prestations</h2>
-    {#each items as item, index}
-      <div class="mb-4 p-4 border rounded bg-gray-50">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block font-semibold mb-1">Description</label>
-            <input
-              type="text"
-              bind:value={item.description}
-              required
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+    <div class="space-y-6">
+      {#each items as item, index (index)}
+        <div transition:fade class="p-4 border rounded bg-gray-50">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-gray-700 font-semibold mb-1">Description</label>
+              <input
+                type="text"
+                bind:value={item.description}
+                required
+                class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-semibold mb-1">Quantité</label>
+              <input
+                type="number"
+                bind:value={item.quantity}
+                min="1"
+                required
+                class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-semibold mb-1">Prix unitaire</label>
+              <input
+                type="number"
+                bind:value={item.price}
+                min="0"
+                step="0.01"
+                required
+                class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
           </div>
-          <div>
-            <label class="block font-semibold mb-1">Quantité</label>
-            <input
-              type="number"
-              bind:value={item.quantity}
-              min="1"
-              required
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-          <div>
-            <label class="block font-semibold mb-1">Prix unitaire</label>
-            <input
-              type="number"
-              bind:value={item.price}
-              min="0"
-              step="0.01"
-              required
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+          {#if items.length > 1}
+            <button
+              type="button"
+              class="mt-2 inline-block px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+              on:click={() => removeItem(index)}
+            >
+              Supprimer cette prestation
+            </button>
+          {/if}
         </div>
-        {#if items.length > 1}
-          <button
-            type="button"
-            class="mt-2 inline-block px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-            on:click={() => removeItem(index)}
-          >
-            Supprimer cette prestation
-          </button>
-        {/if}
-      </div>
-    {/each}
+      {/each}
+    </div>
     <button
       type="button"
-      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+      class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition shadow-lg"
       on:click={addItem}
     >
       Ajouter une prestation
@@ -164,11 +169,11 @@
   </div>
   
   <!-- Bouton de sauvegarde -->
-  <div class="mt-8 text-center">
+  <div class="mt-10 text-center">
     <button
       type="button"
       on:click={saveInvoice}
-      class="px-8 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition"
+      class="px-8 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition shadow-md"
     >
       Enregistrer la modification
     </button>
