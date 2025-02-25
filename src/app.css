@@ -2,3 +2,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Dans src/app.css ou un fichier importé globalement */
+.pdf-style {
+    /* Forcer des couleurs standards en hexadécimal pour le PDF */
+    color: #1F2937 !important;  /* gris foncé */
+    background-color: #ffffff !important;
+  }
+  
+/* Forcer des couleurs standards pour l'aperçu PDF */
+#invoice-content {
+    color: #1F2937 !important;      /* gris foncé */
+    background-color: #ffffff !important;
+  }

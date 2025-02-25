@@ -42,6 +42,8 @@
 		"@lucia-auth/adapter-prisma": "^4.0.1",
 		"@prisma/client": "^5.0.0",
 		"better-sqlite3": "^11.8.1",
+		"daisyui": "^4.12.23",
+		"html2pdf.js": "^0.10.2",
 		"jspdf": "^3.0.0",
 		"lucia": "^3.2.2",
 		"prisma": "^5.0.0"
