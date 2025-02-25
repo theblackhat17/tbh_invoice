@@ -6,7 +6,7 @@ import { json } from '@sveltejs/kit';
 export const POST: RequestHandler = async ({ request }) => {
   const data = await request.json();
   // On récupère les données envoyées depuis le formulaire, à l'exception du numéro de facture
-  const { invoice_date, client_name, client_address, items, userId } = data;
+  const { invoice_date, client_name, client_address, items } = data;
 
   // Calcul du numéro automatique
   const now = new Date();
@@ -26,8 +26,8 @@ export const POST: RequestHandler = async ({ request }) => {
 
   // Insertion dans la BDD
   const stmt = db.prepare(`
-    INSERT INTO invoices (invoice_number, invoice_date, client_name, client_address, items, userId)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO invoices (invoice_number, invoice_date, client_name, client_address, items)
+    VALUES (?, ?, ?, ?, ?)
   `);
   const info = stmt.run(
     invoice_number,
@@ -35,7 +35,6 @@ export const POST: RequestHandler = async ({ request }) => {
     client_name,
     client_address,
     JSON.stringify(items),
-    userId
   );
   return json({ success: true, id: info.lastInsertRowid, invoice_number });
 };
