@@ -1,11 +1,17 @@
 <!-- src/routes/invoices/InvoicePreview.svelte -->
 <script lang="ts">
   export let invoice;
-  // Calcule le total des prestations
+
+  interface InvoiceItem {
+    description: string;
+    quantity: number;
+    price: number;
+  }
+
   let total = 0;
   $: {
-    const items = JSON.parse(invoice.items);
-    total = items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+    const itemsParsed: InvoiceItem[] = JSON.parse(invoice.items);
+    total = itemsParsed.reduce((sum: number, item: InvoiceItem) => sum + item.quantity * item.price, 0);
   }
 </script>
 
