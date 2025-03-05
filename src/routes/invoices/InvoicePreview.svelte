@@ -11,7 +11,7 @@
   let total = 0;
   $: {
     const itemsParsed: InvoiceItem[] = JSON.parse(invoice.items);
-    total = itemsParsed.reduce((sum: number, item: InvoiceItem) => sum + item.quantity * item.price, 0);
+    total = itemsParsed.reduce((sum: number, item: InvoiceItem) => sum + (item.quantity * item.price), 0);
   }
 </script>
 
@@ -19,11 +19,9 @@
   <!-- En-tête -->
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
     <div>
-      <!-- Logo agrandi en haut à gauche -->
       <img src="/logo.png" alt="Logo" style="width: 128px; height: auto;" />
     </div>
     <div style="text-align: right;">
-      <!-- Numéro de facture en haut à droite -->
       <h2 style="font-size: 1.875rem; font-weight: bold;">Facture N°{invoice.invoice_number}</h2>
     </div>
   </div>
@@ -73,14 +71,19 @@
   
   <hr style="border-color: #D1D5DB; margin: 16px 0;" />
   
-  <!-- Affichage du total des prestations -->
+  <!-- Affichage du total -->
   <div style="margin-top: 16px;">
     <p style="font-size: 1.125rem; font-weight: bold;">Total HT : {total.toFixed(2)} €</p>
   </div>
   
-  <!-- Pied de page avec informations fixes, positionnées en bas à gauche -->
+  <!-- Pied de page avec informations fixes -->
   <div style="margin-top: 32px;">
     <p style="font-size: 0.875rem; font-weight: 600;">IBAN : FR76 2823 3000 0153 3547 5796 770 | REVOLUT</p>
     <p style="font-size: 0.875rem;">Nom/Prénom : VANDEWALLE CLEMENT</p>
+  </div>
+  
+  <!-- Texte en bas centré -->
+  <div style="margin-top: 16px; text-align: center; font-size: 0.875rem;">
+    TVA non applicable, article 293B du CGI
   </div>
 </div>
