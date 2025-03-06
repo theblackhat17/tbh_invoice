@@ -20,6 +20,7 @@
   }
 
   // Champs de la facture
+  let invoiceNumber = '';  // Nouveau champ pour saisir le numéro de facture manuellement
   let invoiceDate = '';
   let clientName = '';
   let clientAddress = '';
@@ -64,7 +65,9 @@
   }
 
   async function saveInvoice() {
+    // Inclure le numéro de facture dans les données envoyées
     const invoiceData = {
+      invoice_number: invoiceNumber,
       invoice_date: invoiceDate,
       client_name: clientName,
       client_address: clientAddress,
@@ -91,6 +94,12 @@
   function generatePDF() {
     const doc = new jsPDF();
     let y = 20;
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text(`Facture N°${invoiceNumber}`, 105, y, { align: "center" });
+    y += 12;
+    doc.setFontSize(12);
+    doc.setFont("Helvetica", "normal");
     doc.text(`Date: ${invoiceDate}`, 10, y);
     y += 10;
     doc.text(`Client: ${clientName}`, 10, y);
@@ -109,6 +118,12 @@
 
 <div class="max-w-3xl mx-auto p-8 bg-gray-50 rounded shadow">
   <h1 class="text-3xl font-bold mb-6 text-center">Créer une Nouvelle Facture</h1>
+  
+  <!-- Champ pour saisir le numéro de facture -->
+  <div class="mb-4">
+    <label class="block text-gray-700 font-semibold">Numéro de facture :</label>
+    <input type="text" bind:value={invoiceNumber} required class="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+  </div>
   
   <!-- Sélection d'un client existant -->
   {#if clients.length > 0}
@@ -168,7 +183,7 @@
     </button>
   </div>
   
-  <!-- Boutons d'action -->
+  <!-- Bouton d'enregistrement de la facture -->
   <div class="flex justify-between">
     <button type="submit" on:click|preventDefault={saveInvoice} class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
       Enregistrer la facture
