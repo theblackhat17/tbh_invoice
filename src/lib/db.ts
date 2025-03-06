@@ -1,6 +1,7 @@
 // src/lib/db.ts
 import Database from 'better-sqlite3';
-const db = new Database('invoices.db', { verbose: console.log });
+const db = new Database('/tmp/invoices.db', { verbose: console.log });
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS invoices (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,4 +24,5 @@ db.exec(`
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
 `);
+
 export default db;
