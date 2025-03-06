@@ -19,8 +19,9 @@
     country?: string;
   }
 
-  // Champs de la facture
-  let invoiceNumber = '';  // Nouveau champ pour saisir le numéro de facture manuellement
+  // Champs de la facture/devis
+  let documentType: 'facture' | 'devis' = 'facture'; // Toggle entre facture et devis
+  let invoiceNumber = '';
   let invoiceDate = '';
   let clientName = '';
   let clientAddress = '';
@@ -65,13 +66,13 @@
   }
 
   async function saveInvoice() {
-    // Inclure le numéro de facture dans les données envoyées
     const invoiceData = {
       invoice_number: invoiceNumber,
       invoice_date: invoiceDate,
       client_name: clientName,
       client_address: clientAddress,
-      items
+      items,
+      documentType // Envoie aussi le type de document
     };
 
     try {
@@ -81,22 +82,24 @@
         body: JSON.stringify(invoiceData)
       });
       if (!res.ok) {
-        throw new Error("Erreur lors de l'enregistrement de la facture.");
+        throw new Error("Erreur lors de l'enregistrement.");
       }
-      alert('Facture enregistrée !');
+      alert(`${documentType === 'facture' ? 'Facture' : 'Devis'} enregistrée !`);
       goto('/invoices');
     } catch (err: any) {
       alert(err.message);
     }
   }
 
-  // Fonction pour générer le PDF (version de base ici)
+  // Fonction pour générer le PDF avec jsPDF (version de base)
   function generatePDF() {
     const doc = new jsPDF();
     let y = 20;
+    // Choix du titre selon le type de document
+    const title = documentType === 'facture' ? `Facture N°${invoiceNumber}` : `Devis N°${invoiceNumber}`;
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(16);
-    doc.text(`Facture N°${invoiceNumber}`, 105, y, { align: "center" });
+    doc.text(title, 105, y, { align: "center" });
     y += 12;
     doc.setFontSize(12);
     doc.setFont("Helvetica", "normal");
@@ -112,16 +115,31 @@
       doc.text(`${index + 1}. ${item.description} - Qté: ${item.quantity} - Prix: ${item.price} €`, 10, y);
       y += 10;
     });
-    doc.save('facture.pdf');
+    doc.save(`${documentType}-${invoiceNumber}.pdf`);
   }
 </script>
 
 <div class="max-w-3xl mx-auto p-8 bg-gray-50 rounded shadow">
-  <h1 class="text-3xl font-bold mb-6 text-center">Créer une Nouvelle Facture</h1>
+  <h1 class="text-3xl font-bold mb-6 text-center">Créer une Nouvelle {documentType === 'facture' ? 'Facture' : 'Devis'}</h1>
   
-  <!-- Champ pour saisir le numéro de facture -->
+  <!-- Toggle entre Facture et Devis -->
   <div class="mb-4">
-    <label class="block text-gray-700 font-semibold">Numéro de facture :</label>
+    <label class="block text-gray-700 font-semibold mb-1">Type de document :</label>
+    <div class="flex items-center space-x-4">
+      <label class="flex items-center">
+        <input type="radio" bind:group={documentType} value="facture" class="mr-2" />
+        <span>Facture</span>
+      </label>
+      <label class="flex items-center">
+        <input type="radio" bind:group={documentType} value="devis" class="mr-2" />
+        <span>Devis</span>
+      </label>
+    </div>
+  </div>
+  
+  <!-- Champ pour saisir le numéro de document -->
+  <div class="mb-4">
+    <label class="block text-gray-700 font-semibold">Numéro de {documentType === 'facture' ? 'facture' : 'devis'} :</label>
     <input type="text" bind:value={invoiceNumber} required class="mt-1 w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"/>
   </div>
   
@@ -183,10 +201,13 @@
     </button>
   </div>
   
-  <!-- Bouton d'enregistrement de la facture -->
+  <!-- Boutons d'action -->
   <div class="flex justify-between">
-    <button type="submit" on:click|preventDefault={saveInvoice} class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-      Enregistrer la facture
+    <button type="button" on:click|preventDefault={saveInvoice} class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+      Enregistrer la {documentType === 'facture' ? 'facture' : 'devis'}
+    </button>
+    <button type="button" on:click={generatePDF} class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 transition">
+      Générer PDF
     </button>
   </div>
 </div>
